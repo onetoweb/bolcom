@@ -1,0 +1,29 @@
+{
+    "name": "onetoweb/bolcom",
+    "description": "Bol.com API Client",
+    "keywords": [
+        "api",
+        "php",
+        "bol.com"
+    ],
+    "type": "library",
+    "homepage": "https://github.com/onetoweb/bolcom",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jonathan van 't Ende",
+            "email": "jvantende@onetoweb.nl"
+        }
+    ],
+    "require": {
+        "php": ">=7.1.0"
+    },
+    "require-dev": {
+        "symfony/error-handler": "^5.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Onetoweb\\Bolcom\\": "src/"
+        }
+    }
+}
