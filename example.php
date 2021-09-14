@@ -2,8 +2,6 @@
 
 require 'vendor/autoload.php';
 
-Symfony\Component\ErrorHandler\Debug::enable();
-
 use Onetoweb\Bolcom\Client;
 
 // params
