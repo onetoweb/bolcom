@@ -22,20 +22,20 @@ class Client
     /**
      * Base uri
      */
-    const BASE_URI = 'https://api.bol.com';
+    public const BASE_URI = 'https://api.bol.com';
     
     /**
      * Methods
      */
-    const METHOD_GET = 'GET';
-    const METHOD_POST = 'POST';
-    const METHOD_PUT = 'PUT';
-    const METHOD_DELETE = 'DELETE';
+    public const METHOD_GET = 'GET';
+    public const METHOD_POST = 'POST';
+    public const METHOD_PUT = 'PUT';
+    public const METHOD_DELETE = 'DELETE';
     
     /**
      * Version
      */
-    const VERSION = 7;
+    public const VERSION = 8;
     
     /**
      * @var string

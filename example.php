@@ -7,9 +7,10 @@ use Onetoweb\Bolcom\Client;
 // params
 $clientId = 'client_id';
 $secret = 'secret';
+$version = 8;
 
 // get client
-$client = new Client($clientId, $secret);
+$client = new Client($clientId, $secret, $version);
 
 // set limit reached callBack
 $client->setLimitReachedCallBack(function(int $seconds) {
