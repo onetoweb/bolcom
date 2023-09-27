@@ -118,7 +118,6 @@ $processStatus = $client->post('/retailer/offers/export', [
 // https://api.bol.com/retailer/public/redoc/v5#operation/get-offer-export
 $reportId = '00000000-0000-0000-0000-000000000000';
 $offerExport = $client->get("/retailer/offers/export/$reportId");
-file_put_contents('/path/to/filename.csv', $offerExport);
 
 // get offer
 // https://api.bol.com/retailer/public/redoc/v5#operation/get-offer
@@ -301,13 +300,11 @@ $replenishmentId = '2312078154';
 $loadCarrierLabels = $client->get('/retailer/replenishments/$replenishmentId/load-carrier-labels', [
     'label-type' => 'WAREHOUSE',
 ]);
-file_put_contents('/path/to/filename.pdf', $loadCarrierLabels);
 
 // get pick list
 // https://api.bol.com/retailer/public/redoc/v5#operation/get-pick-list
 $replenishmentId = '2312078154';
 $pickList = $client->get("/retailer/replenishments/$replenishmentId/pick-list");
-file_put_contents('/path/to/filename.pdf', $pickList);
 
 // get returns
 // https://api.bol.com/retailer/public/redoc/v5#operation/get-returns
@@ -364,7 +361,6 @@ $deliveryOptions = $client->post('/retailer/shipping-labels/delivery-options', [
 // https://api.bol.com/retailer/public/redoc/v5#operation/get-shipping-label
 $shippingLabelId = '00000000-0000-0000-0000-000000000000';
 $shippingLabel = $client->get("/retailer/shipping-labels/$shippingLabelId");
-file_put_contents('/path/to/filename.pdf', $shippingLabel);
 
 // add transport information
 // https://api.bol.com/retailer/public/redoc/v5#operation/add-transport-information-by-transport-id

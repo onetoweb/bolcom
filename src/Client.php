@@ -229,28 +229,11 @@ class Client
             $this->getAccessToken();
         }
         
-        // get accept type
-        if (
-            $endpoint == '/retailer/replenishments/product-labels'
-            or fnmatch('/retailer/replenishments/*/load-carrier-labels', $endpoint)
-            or fnmatch('/retailer/replenishments/*/pick-list', $endpoint)
-            or fnmatch('/retailer/shipping-labels/*', $endpoint)
-        ) {
-            $acceptType = 'pdf';
-        } else if (fnmatch('/retailer/offers/export/*', $endpoint)) {
-            $acceptType = 'csv';
-        } else {
-            $acceptType = 'json';
-        }
-        
-        // get mime type
-        $mimeType = "application/vnd.retailer.v{$this->version}+";
-        
         // build options
         $options = [
             RequestOptions::HEADERS => [
-                'Accept' => $mimeType.$acceptType,
-                'Content-Type' => $mimeType.'json',
+                'Accept' => "application/vnd.retailer.v{$this->version}+json",
+                'Content-Type' => "application/vnd.retailer.v{$this->version}+json",
                 'Authorization' => "Bearer {$this->token->getValue()}"
             ]
         ];
@@ -292,17 +275,8 @@ class Client
             // get contents
             $contents = $response->getBody()->getContents();
             
-            // return contents
-            if ($acceptType !== 'json') {
-                
-                // return string
-                return $contents;
-                
-            } else {
-                
-                // return array
-                return json_decode($contents, true);
-            }
+            // return array
+            return json_decode($contents, true);
             
         } catch (ClientException|GuzzleRequestException $exception) {
             
