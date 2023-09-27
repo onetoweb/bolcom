@@ -20,7 +20,7 @@
 
  - Defaults to api v8
 
-## [1.0.5] - 2023-02-14
+## [1.0.5] - 2023-09-27
 
  - Added changelog
  - Defaults to api v9
