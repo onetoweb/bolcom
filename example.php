@@ -7,7 +7,7 @@ use Onetoweb\Bolcom\Client;
 // params
 $clientId = 'client_id';
 $secret = 'secret';
-$version = 8;
+$version = 9;
 
 // get client
 $client = new Client($clientId, $secret, $version);

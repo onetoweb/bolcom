@@ -35,7 +35,7 @@ class Client
     /**
      * Version
      */
-    public const VERSION = 8;
+    public const VERSION = 9;
     
     /**
      * @var string
