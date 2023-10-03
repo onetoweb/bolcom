@@ -1,4 +1,4 @@
-# Onetoweb Bol.com API Client
+# Onetoweb Bol.com Retailer Api Client
 
 ## Installing
 
@@ -8,4 +8,12 @@ composer require onetoweb/bolcom
 
 ## Usage
 
-See example.php
+See [Documentation](docs/index.rst)
+
+## Change Log
+
+See [Change Log](CHANGELOG.md)
+
+## Api Documentation
+
+See [Api Documentation](https://api.bol.com/retailer/public/Retailer-API/index.html)

@@ -4,9 +4,7 @@ namespace Onetoweb\Bolcom;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\RequestOptions;
-use GuzzleHttp\Exception\{ClientException, RequestException  as GuzzleRequestException};
-use Onetoweb\Bolcom\Exception\{RequestException, RequestJsonException};
-use Onetoweb\Bolcom\Token;
+use Onetoweb\Bolcom\{Token, Endpoint};
 use DateTime;
 
 /**
@@ -15,7 +13,7 @@ use DateTime;
  * @author Jonathan van 't Ende <jvantende@onetoweb.nl>
  * @copyright Onetoweb B.V.
  * 
- * @see https://api.bol.com/retailer/public/redoc/v5
+ * @see https://api.bol.com/retailer/public/redoc/v10/retailer.html
  */
 class Client
 {
@@ -30,12 +28,21 @@ class Client
     public const METHOD_GET = 'GET';
     public const METHOD_POST = 'POST';
     public const METHOD_PUT = 'PUT';
+    public const METHOD_PATCH = 'PATCH';
     public const METHOD_DELETE = 'DELETE';
+    public const METHOD_OPTIONS = 'OPTIONS';
+    public const METHOD_HEAD = 'HEAD';
     
     /**
      * Version
      */
-    public const VERSION = 9;
+    public const VERSION = 10;
+    
+    /**
+     * Accept Types
+     */
+    public const ACCEPT_TYPE_JSON = 'json';
+    public const ACCEPT_TYPE_CSV = 'csv';
     
     /**
      * @var string
@@ -56,6 +63,11 @@ class Client
      * @var int
      */
     private $version;
+    
+    /**
+     * @var bool
+     */
+    private $demo;
     
     /**
      * @var array
@@ -83,15 +95,61 @@ class Client
     private $rateLimitReset;
     
     /**
+     * @var string
+     */
+    private $acceptType = self::ACCEPT_TYPE_JSON;
+    
+    /**
      * @param string $clientId
      * @param string $secret
      * @param int $version = self::VERSION
+     * @param bool $demo = false
      */
-    public function __construct(string $clientId, string $secret, int $version = self::VERSION)
+    public function __construct(string $clientId, string $secret, int $version = self::VERSION, bool $demo = false)
     {
         $this->clientId = $clientId;
         $this->secret = $secret;
         $this->version = $version;
+        $this->demo = $demo;
+        
+        // load endpoints
+        $this->loadEndpoints();
+    }
+    
+    /**
+     * @return string[]
+     */
+    public static function getMethods(): array
+    {
+        return [
+            self::METHOD_GET,
+            self::METHOD_POST,
+            self::METHOD_PUT,
+            self::METHOD_PATCH,
+            self::METHOD_DELETE,
+            self::METHOD_OPTIONS,
+            self::METHOD_HEAD
+        ];
+    }
+    
+    /**
+     * @return bool
+     */
+    public function isDemo(): bool
+    {
+        return $this->demo;
+    }
+    
+    /**
+     * @return void
+     */
+    private function loadEndpoints(): void
+    {
+        $this->commission = new Endpoint\Commission($this);
+        $this->insights = new Endpoint\Insights($this);
+        $this->inventory = new Endpoint\Inventory($this);
+        $this->invoices = new Endpoint\Invoices($this);
+        $this->offers = new Endpoint\Offers($this);
     }
     
     /**
@@ -168,7 +226,7 @@ class Client
     /**
      * @param string $endpoint
      * @param array $query = []
-     *
+     * 
      * @return mixed
      */
     public function get(string $endpoint, array $query = [])
@@ -180,7 +238,7 @@ class Client
      * @param string $endpoint
      * @param array $data = []
      * @param array $query = []
-     *
+     * 
      * @return mixed
      */
     public function post(string $endpoint, array $data = [], array $query = [])
@@ -192,7 +250,7 @@ class Client
      * @param string $endpoint
      * @param array $data = []
      * @param array $query = []
-     *
+     * 
      * @return mixed
      */
     public function put(string $endpoint, array $data = [], array $query = [])
@@ -202,13 +260,56 @@ class Client
     
     /**
      * @param string $endpoint
+     * @param array $data = []
      * @param array $query = []
-     *
+     * 
+     * @return mixed
+     */
+    public function patch(string $endpoint, array $data = [], array $query = [])
+    {
+        return $this->request(self::METHOD_PATCH, $endpoint, $data, $query);
+    }
+    
+    /**
+     * @param string $endpoint
+     * @param array $query = []
+     * 
      * @return mixed
      */
     public function delete(string $endpoint, array $query = [])
     {
-        return $this->request(self::METHOD_DELETE, $endpoint, $query);
+        return $this->request(self::METHOD_DELETE, $endpoint, [], $query);
+    }
+    
+    /**
+     * @param string $endpoint
+     * @param array $query = []
+     * 
+     * @return mixed
+     */
+    public function options(string $endpoint, array $query = [])
+    {
+        return $this->request(self::METHOD_OPTIONS, $endpoint, [], $query);
+    }
+    
+    /**
+     * @param string $endpoint
+     * 
+     * @return mixed
+     */
+    public function head(string $endpoint)
+    {
+        return $this->request(self::METHOD_HEAD, $endpoint);
+    }
+    
+    /**
+     * @param string $acceptType = Client::ACCEPT_TYPE_JSON
+     *
+     * @return void
+     */
+    public function setAcceptType(string $acceptType = Client::ACCEPT_TYPE_JSON): void
+    {
+        $this->acceptType = $acceptType;
     }
     
     /**
@@ -216,9 +317,7 @@ class Client
      * @param string $endpoint
      * @param array $data = []
      * @param array $query = []
-     * 
-     * @throws RequestException
-     * @throws RequestJsonException if a request contains validation errors
+     * @param string $requester
      * 
      * @return mixed
      */
@@ -231,8 +330,9 @@ class Client
         
         // build options
         $options = [
+            RequestOptions::HTTP_ERRORS => false,
             RequestOptions::HEADERS => [
-                'Accept' => "application/vnd.retailer.v{$this->version}+json",
+                'Accept' => "application/vnd.retailer.v{$this->version}+{$this->acceptType}",
                 'Content-Type' => "application/vnd.retailer.v{$this->version}+json",
                 'Authorization' => "Bearer {$this->token->getValue()}"
             ]
@@ -253,38 +353,38 @@ class Client
             'base_uri' => self::BASE_URI,
         ]);
         
-        try {
+        // request
+        $response = $client->request($method, $endpoint, $options);
+        
+        // get ratelimit
+        $this->rateLimit = (int) $response->getHeaderLine('X-RateLimit-Limit');
+        $this->rateLimitRemaining = (int) $response->getHeaderLine('X-RateLimit-Remaining');
+        $this->rateLimitReset = (int) $response->getHeaderLine('X-RateLimit-Reset');
+        
+        if ($this->limitReachedCallback !== null) {
             
-            // request
-            $response = $client->request($method, $endpoint, $options);
-            
-            // get ratelimit
-            $this->rateLimit = (int) $response->getHeaderLine('X-RateLimit-Limit');
-            $this->rateLimitRemaining = (int) $response->getHeaderLine('X-RateLimit-Remaining');
-            $this->rateLimitReset = (int) $response->getHeaderLine('X-RateLimit-Reset');
-            
-            if ($this->limitReachedCallback !== null) {
+            // check rate limit
+            if ($this->rateLimitRemaining == 0) {
                 
-                // check rate limit
-                if ($this->rateLimitRemaining == 0) {
-                    
-                    ($this->limitReachedCallback)($this->rateLimitReset);
-                }
+                ($this->limitReachedCallback)($this->rateLimitReset);
             }
-            
-            // get contents
-            $contents = $response->getBody()->getContents();
+        }
+        
+        // get contents
+        $contents = $response->getBody()->getContents();
+        
+        if ($this->acceptType == Client::ACCEPT_TYPE_JSON) {
             
             // return array
             return json_decode($contents, true);
             
-        } catch (ClientException|GuzzleRequestException $exception) {
+        } else {
             
-            if ($exception->hasResponse() and $exception->getResponse()->getBody()->getSize() > 0) {
-                throw new RequestJsonException($exception->getResponse()->getBody()->getContents(), $exception->getCode(), $exception);
-            }
+            // reset accept type to json
+            $this->acceptType = self::ACCEPT_TYPE_JSON;
             
-            throw new RequestException($exception->getMessage(), $exception->getCode(), $exception);
+            // return contents
+            return $contents;
         }
     }
 }

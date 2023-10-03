@@ -25,3 +25,12 @@
  - Added changelog
  - Defaults to api v9
  - Only acccept json response
+
+## [2.0.0] - 2023-10-02
+
+ - Defaults to api v10
+ - Added endpoints
+ - Added acccept type csv response
+ - Added documentation
+ - Added demo parameter
+ - Remove exceptions and return json violations
