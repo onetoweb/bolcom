@@ -5,21 +5,21 @@ namespace Onetoweb\Bolcom\Endpoint;
 use Onetoweb\Bolcom\Client;
 
 /**
- * Inventory Endpoint.
+ * Orders Endpoint.
  * 
  * @author Jonathan van 't Ende <jvantende@onetoweb.nl>
  * @copyright Onetoweb B.V.
  * 
- * @see https://api.bol.com/retailer/public/redoc/v10/retailer.html#tag/Invoices
+ * @see https://api.bol.com/retailer/public/redoc/v10/retailer.html#tag/Orders
  */
-class Invoices extends AbstractEndpoint
+class Orders extends AbstractEndpoint
 {
     /**
      * {@inheritdoc}
      */
     public static function getName(): string
     {
-        return 'invoices';
+        return 'orders';
     }
     
     /**
@@ -33,22 +33,22 @@ class Invoices extends AbstractEndpoint
     }
     
     /**
-     * @param string $invoiceId
+     * @param array $query
      * 
      * @return array
      */
-    public function getById(string $invoiceId): array
+    public function cancelOrderItem(array $query): array
     {
-        return $this->client->get($this->getUrl($invoiceId));
+        return $this->client->put($this->getUrl('cancellation'), $query);
     }
     
     /**
-     * @param string $invoiceId
-     *
+     * @param string $orderId
+     * 
      * @return array
      */
-    public function getSpecificationById(string $invoiceId): array
+    public function getById(string $orderId): array
     {
-        return $this->client->get($this->getUrl("$invoiceId/specification"));
+        return $this->client->get($this->getUrl($orderId));
     }
 }

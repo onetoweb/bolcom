@@ -40,3 +40,4 @@ You can use one of the built in endpoints see examples below:
 * `Inventory <inventory.rst>`_
 * `Invoices <invoices.rst>`_
 * `Offers <offers.rst>`_
+* `Orders <orders.rst>`_

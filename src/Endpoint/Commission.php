@@ -2,6 +2,8 @@
 
 namespace Onetoweb\Bolcom\Endpoint;
 
+use Onetoweb\Bolcom\Client;
+
 /**
  * Commission Endpoint.
  * 

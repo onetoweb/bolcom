@@ -150,6 +150,8 @@ class Client
         $this->inventory = new Endpoint\Inventory($this);
         $this->invoices = new Endpoint\Invoices($this);
         $this->offers = new Endpoint\Offers($this);
+        $this->orders = new Endpoint\Orders($this);
+        
     }
     
     /**
