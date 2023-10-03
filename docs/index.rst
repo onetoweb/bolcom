@@ -43,3 +43,4 @@ You can use one of the built in endpoints see examples below:
 * `Orders <orders.rst>`_
 * `Product Content <product_content.rst>`_
 * `Products <products.rst>`_
+* `Promotions <promotions.rst>`_
