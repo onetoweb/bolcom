@@ -152,6 +152,7 @@ class Client
         $this->offers = new Endpoint\Offers($this);
         $this->orders = new Endpoint\Orders($this);
         $this->productContent = new Endpoint\ProductContent($this);
+        $this->products = new Endpoint\Products($this);
     }
     
     /**
