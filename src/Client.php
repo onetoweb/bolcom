@@ -43,6 +43,7 @@ class Client
      */
     public const ACCEPT_TYPE_JSON = 'json';
     public const ACCEPT_TYPE_CSV = 'csv';
+    public const ACCEPT_TYPE_PDF = 'pdf';
     
     /**
      * @var string
@@ -154,6 +155,7 @@ class Client
         $this->productContent = new Endpoint\ProductContent($this);
         $this->products = new Endpoint\Products($this);
         $this->promotions = new Endpoint\Promotions($this);
+        $this->replenishments = new Endpoint\Replenishments($this);
     }
     
     /**

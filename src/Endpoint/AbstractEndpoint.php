@@ -42,11 +42,11 @@ abstract class AbstractEndpoint implements EndpointInterface
      */
     protected function getUrl(string $endpoint = null): string
     {
-        return implode('/', [
+        return rtrim(implode('/', [
             $this->client::BASE_URI,
             $this->client->isDemo() ? 'retailer-demo' : 'retailer',
             $this->getName(),
             $endpoint
-        ]);
+        ]), '/');
     }
 }
