@@ -30,7 +30,7 @@
 
  - Defaults to api v10
  - Added endpoints
- - Added acccept type csv response
+ - Added acccept type csv/pdf response
  - Added documentation
  - Added demo parameter
  - Remove exceptions and return json violations
