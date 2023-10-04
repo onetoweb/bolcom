@@ -157,6 +157,7 @@ class Client
         $this->promotions = new Endpoint\Promotions($this);
         $this->replenishments = new Endpoint\Replenishments($this);
         $this->retailers = new Endpoint\Retailers($this);
+        $this->returns = new Endpoint\Returns($this);
     }
     
     /**

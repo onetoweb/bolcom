@@ -46,3 +46,4 @@ You can use one of the built in endpoints see examples below:
 * `Promotions <promotions.rst>`_
 * `Replenishments <replenishments.rst>`_
 * `Retailers <retailers.rst>`_
+* `Returns <returns.rst>`_
