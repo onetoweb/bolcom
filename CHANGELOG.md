@@ -26,7 +26,7 @@
  - Defaults to api v9
  - Only acccept json response
 
-## [2.0.0] - 2023-10-02
+## [2.0.0] - 2023-10-04
 
  - Defaults to api v10
  - Added endpoints
