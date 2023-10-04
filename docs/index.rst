@@ -48,5 +48,8 @@ You can use one of the built in endpoints see examples below:
 * `Retailers <retailers.rst>`_
 * `Returns <returns.rst>`_
 * `Shipments <shipments.rst>`_
+* `Shipping Labels <shipping_labels.rst>`_
+
+
 
 

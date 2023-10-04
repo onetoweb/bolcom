@@ -159,6 +159,7 @@ class Client
         $this->retailers = new Endpoint\Retailers($this);
         $this->returns = new Endpoint\Returns($this);
         $this->shipments = new Endpoint\Shipments($this);
+        $this->shippingLabels = new Endpoint\ShippingLabels($this);
     }
     
     /**
