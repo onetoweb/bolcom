@@ -49,7 +49,4 @@ You can use one of the built in endpoints see examples below:
 * `Returns <returns.rst>`_
 * `Shipments <shipments.rst>`_
 * `Shipping Labels <shipping_labels.rst>`_
-
-
-
-
+* `Subscriptions <subscriptions.rst>`_
