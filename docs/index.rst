@@ -50,3 +50,4 @@ You can use one of the built in endpoints see examples below:
 * `Shipments <shipments.rst>`_
 * `Shipping Labels <shipping_labels.rst>`_
 * `Subscriptions <subscriptions.rst>`_
+* `Transports <transports.rst>`_
