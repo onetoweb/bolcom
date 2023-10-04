@@ -385,7 +385,7 @@ class Client
         // get contents
         $contents = $response->getBody()->getContents();
         
-        if ($this->acceptType == Client::ACCEPT_TYPE_JSON) {
+        if ($this->acceptType == Client::ACCEPT_TYPE_JSON or !in_array($response->getStatusCode(), range(200, 299))) {
             
             // return array
             return json_decode($contents, true);

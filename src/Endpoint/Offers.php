@@ -47,7 +47,7 @@ class Offers extends AbstractEndpoint
      * 
      * @return string
      */
-    public function exportByReportId(string $reportId): string
+    public function exportByReportId(string $reportId)
     {
         $this->setAcceptType(Client::ACCEPT_TYPE_CSV);
         
@@ -67,9 +67,9 @@ class Offers extends AbstractEndpoint
     /**
      * @param string $offerId
      * 
-     * @return string
+     * @return array|string
      */
-    public function getUnpublishedById(string $offerId): string
+    public function getUnpublishedById(string $offerId)
     {
         $this->setAcceptType(Client::ACCEPT_TYPE_CSV);
         
@@ -89,7 +89,7 @@ class Offers extends AbstractEndpoint
     /**
      * @param string $offerId
      * 
-     * @return array
+     * @return array|string
      */
     public function update(string $offerId, array $data): array
     {

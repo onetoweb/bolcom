@@ -83,9 +83,9 @@ class Replenishments extends AbstractEndpoint
     /**
      * @param array $data
      * 
-     * @return array
+     * @return array|string
      */
-    public function createProductLabels(array $data): string
+    public function createProductLabels(array $data)
     {
         $this->setAcceptType(Client::ACCEPT_TYPE_PDF);
         
@@ -117,9 +117,9 @@ class Replenishments extends AbstractEndpoint
      * @param string $replenishmentId
      * @param array $query = []
      * 
-     * @return array
+     * @return array|string
      */
-    public function getLoadCarrierLabelsById(string $replenishmentId, array $query = []): string
+    public function getLoadCarrierLabelsById(string $replenishmentId, array $query = [])
     {
         $this->setAcceptType(Client::ACCEPT_TYPE_PDF);
         
@@ -129,9 +129,9 @@ class Replenishments extends AbstractEndpoint
     /**
      * @param string $replenishmentId
      *
-     * @return array
+     * @return array|string
      */
-    public function getPickListById(string $replenishmentId): string
+    public function getPickListById(string $replenishmentId)
     {
         $this->setAcceptType(Client::ACCEPT_TYPE_PDF);
         

@@ -45,9 +45,9 @@ class ShippingLabels extends AbstractEndpoint
     /**
      * @param string $shippingLabelId
      * 
-     * @return string
+     * @return array|string
      */
-    public function getById(string $shippingLabelId): string
+    public function getById(string $shippingLabelId)
     {
         $this->setAcceptType(Client::ACCEPT_TYPE_PDF);
         
