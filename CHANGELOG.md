@@ -34,3 +34,7 @@
  - Added documentation
  - Added demo parameter
  - Remove exceptions and return json violations
+
+## [2.0.1] - 2023-10-04
+
+ - Bug fixes
