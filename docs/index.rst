@@ -41,6 +41,7 @@ You can use one of the built in endpoints see examples below:
 * `Invoices <invoices.rst>`_
 * `Offers <offers.rst>`_
 * `Orders <orders.rst>`_
+* `Process Status <process_status.rst>`_
 * `Product Content <product_content.rst>`_
 * `Products <products.rst>`_
 * `Promotions <promotions.rst>`_

@@ -49,4 +49,19 @@ abstract class AbstractEndpoint implements EndpointInterface
             $endpoint
         ]), '/');
     }
+    
+    /**
+     * @param string $endpoint = null
+     *
+     * @return string
+     */
+    protected function getUrlShared(string $endpoint = null): string
+    {
+        return rtrim(implode('/', [
+            $this->client::BASE_URI,
+            $this->client->isDemo() ? 'shared-demo' : 'shared',
+            $this->getName(),
+            $endpoint
+        ]), '/');
+    }
 }

@@ -162,6 +162,7 @@ class Client
         $this->shippingLabels = new Endpoint\ShippingLabels($this);
         $this->subscriptions = new Endpoint\Subscriptions($this);
         $this->transports = new Endpoint\Transports($this);
+        $this->processStatus = new Endpoint\ProcessStatus($this);
     }
     
     /**
