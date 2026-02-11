@@ -39,6 +39,10 @@
 
  - Bug fixes
 
-## [2.0.2] - 2023-11-02
+## [2.0.2] - 2023-10-05
+
+ - Added ProcessStatus endpoint
+
+## [2.0.3] - 2026-02-11
 
  - Defaults to api v11
