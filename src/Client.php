@@ -36,7 +36,7 @@ class Client
     /**
      * Version
      */
-    public const VERSION = 10;
+    public const VERSION = 11;
     
     /**
      * Accept Types
