@@ -13,23 +13,14 @@ use DateTime;
 class Token
 {
     /**
-     * @var string
-     */
-    private $value;
-    
-    /**
-     * @var DateTime
-     */
-    private $expires;
-    
-    /**
      * @param string $value
      * @param DateTime $expires
      */
-    public function __construct(string $value, DateTime $expires)
-    {
-        $this->value = $value;
-        $this->expires = $expires;
+    public function __construct(
+        private string $value,
+        private DateTime $expires
+    ) {
+        
     }
     
     /**
@@ -53,6 +44,14 @@ class Token
      */
     public function isExpired(): bool
     {
-        return ($this->expires > new DateTime());
+        return ($this->expires < new DateTime());
+    }
+    
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->value;
     }
 }

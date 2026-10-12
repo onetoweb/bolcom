@@ -3,6 +3,7 @@
 namespace Onetoweb\Bolcom\Endpoint;
 
 use Onetoweb\Bolcom\Client;
+use Onetoweb\Bolcom\Config\{AcceptType, Url};
 
 /**
  * Abstract Endpoint.
@@ -13,37 +14,33 @@ use Onetoweb\Bolcom\Client;
 abstract class AbstractEndpoint implements EndpointInterface
 {
     /**
-     * @var Client
-     */
-    protected $client;
-    
-    /**
      * @param Client $client
      */
-    public function __construct(Client $client)
-    {
-        $this->client = $client;
+    public function __construct(
+        protected Client $client
+    ) {
+        
     }
     
     /**
-     * @param string $acceptType = Client::ACCEPT_TYPE_JSON
+     * @param AcceptType $acceptType = AcceptType::JSON
      * 
      * @return void
      */
-    protected function setAcceptType(string $acceptType = Client::ACCEPT_TYPE_JSON): void
+    protected function setAcceptType(AcceptType $acceptType = AcceptType::JSON): void
     {
         $this->client->setAcceptType($acceptType);
     }
     
     /**
-     * @param string $endpoint = null
+     * @param string|null $endpoint = null
      * 
      * @return string
      */
-    protected function getUrl(string $endpoint = null): string
+    protected function getUrl(?string $endpoint = null): string
     {
         return rtrim(implode('/', [
-            $this->client::BASE_URI,
+            Url::BASE->value,
             $this->client->isDemo() ? 'retailer-demo' : 'retailer',
             $this->getName(),
             $endpoint
@@ -51,14 +48,14 @@ abstract class AbstractEndpoint implements EndpointInterface
     }
     
     /**
-     * @param string $endpoint = null
-     *
+     * @param string|null  $endpoint = null
+     * 
      * @return string
      */
-    protected function getUrlShared(string $endpoint = null): string
+    protected function getUrlShared(?string $endpoint = null): string
     {
         return rtrim(implode('/', [
-            $this->client::BASE_URI,
+            Url::BASE->value,
             $this->client->isDemo() ? 'shared-demo' : 'shared',
             $this->getName(),
             $endpoint

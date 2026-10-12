@@ -3,6 +3,7 @@
 namespace Onetoweb\Bolcom\Endpoint;
 
 use Onetoweb\Bolcom\Client;
+use Onetoweb\Bolcom\Config\AcceptType;
 
 /**
  * Shipping Labels Endpoint.
@@ -49,7 +50,7 @@ class ShippingLabels extends AbstractEndpoint
      */
     public function getById(string $shippingLabelId)
     {
-        $this->setAcceptType(Client::ACCEPT_TYPE_PDF);
+        $this->setAcceptType(AcceptType::PDF);
         
         return $this->client->get($this->getUrl($shippingLabelId));
     }

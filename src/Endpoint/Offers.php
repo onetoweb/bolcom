@@ -3,6 +3,7 @@
 namespace Onetoweb\Bolcom\Endpoint;
 
 use Onetoweb\Bolcom\Client;
+use Onetoweb\Bolcom\Config\AcceptType;
 
 /**
  * Offers Endpoint.
@@ -49,7 +50,7 @@ class Offers extends AbstractEndpoint
      */
     public function exportByReportId(string $reportId)
     {
-        $this->setAcceptType(Client::ACCEPT_TYPE_CSV);
+        $this->setAcceptType(AcceptType::CSV);
         
         return $this->client->get($this->getUrl("export/$reportId"));
     }
@@ -71,7 +72,7 @@ class Offers extends AbstractEndpoint
      */
     public function getUnpublishedById(string $offerId)
     {
-        $this->setAcceptType(Client::ACCEPT_TYPE_CSV);
+        $this->setAcceptType(AcceptType::CSV);
         
         return $this->client->get($this->getUrl("unpublished/$offerId"));
     }

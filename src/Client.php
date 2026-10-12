@@ -5,7 +5,9 @@ namespace Onetoweb\Bolcom;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\RequestOptions;
 use Onetoweb\Bolcom\{Token, Endpoint};
+use Onetoweb\Bolcom\Config\{Method, AcceptType, Url};
 use DateTime;
+use Closure;
 
 /**
  * Client.
@@ -18,87 +20,44 @@ use DateTime;
 class Client
 {
     /**
-     * Base uri
-     */
-    public const BASE_URI = 'https://api.bol.com';
-    
-    /**
-     * Methods
-     */
-    public const METHOD_GET = 'GET';
-    public const METHOD_POST = 'POST';
-    public const METHOD_PUT = 'PUT';
-    public const METHOD_PATCH = 'PATCH';
-    public const METHOD_DELETE = 'DELETE';
-    public const METHOD_OPTIONS = 'OPTIONS';
-    public const METHOD_HEAD = 'HEAD';
-    
-    /**
      * Version
      */
     public const VERSION = 11;
     
     /**
-     * Accept Types
-     */
-    public const ACCEPT_TYPE_JSON = 'json';
-    public const ACCEPT_TYPE_CSV = 'csv';
-    public const ACCEPT_TYPE_PDF = 'pdf';
-    
-    /**
-     * @var string
-     */
-    private $clientId;
-    
-    /**
-     * @var string
-     */
-    private $secret;
-    
-    /**
      * @var Token
      */
-    private $token;
-    
-    /**
-     * @var int
-     */
-    private $version;
-    
-    /**
-     * @var bool
-     */
-    private $demo;
+    private ?Token $token = null;
     
     /**
      * @var array
      */
-    private $rateLimits;
+    private ?array $rateLimits = null;
     
     /**
-     * @var callable
+     * @var Closure
      */
-    private $limitReachedCallback;
-    
-    /**
-     * @var int
-     */
-    private $rateLimit;
+    private ?Closure $limitReachedCallback = null;
     
     /**
      * @var int
      */
-    private $rateLimitRemaining;
+    private ?int $rateLimit = null;
     
     /**
      * @var int
      */
-    private $rateLimitReset;
+    private ?int $rateLimitRemaining = null;
     
     /**
-     * @var string
+     * @var int
      */
-    private $acceptType = self::ACCEPT_TYPE_JSON;
+    private ?int $rateLimitReset = null;
+    
+    /**
+     * @var AcceptType
+     */
+    private AcceptType $acceptType = AcceptType::JSON;
     
     /**
      * @param string $clientId
@@ -106,31 +65,19 @@ class Client
      * @param int $version = self::VERSION
      * @param bool $demo = false
      */
-    public function __construct(string $clientId, string $secret, int $version = self::VERSION, bool $demo = false)
-    {
-        $this->clientId = $clientId;
-        $this->secret = $secret;
-        $this->version = $version;
-        $this->demo = $demo;
+    public function __construct(
         
+        #[\SensitiveParameter]
+        private string $clientId,
+        
+        #[\SensitiveParameter]
+        private string $secret,
+        
+        private int $version = self::VERSION,
+        private bool $demo = false
+    ) {
         // load endpoints
         $this->loadEndpoints();
-    }
-    
-    /**
-     * @return string[]
-     */
-    public static function getMethods(): array
-    {
-        return [
-            self::METHOD_GET,
-            self::METHOD_POST,
-            self::METHOD_PUT,
-            self::METHOD_PATCH,
-            self::METHOD_DELETE,
-            self::METHOD_OPTIONS,
-            self::METHOD_HEAD
-        ];
     }
     
     /**
@@ -173,11 +120,14 @@ class Client
         $options = [
             RequestOptions::HEADERS => [
                 'Authorization' => 'Basic ' . base64_encode("{$this->clientId}:{$this->secret}")
+            ],
+            RequestOptions::QUERY => [
+                'grant_type' => 'client_credentials'
             ]
         ];
         
         $client = new GuzzleClient();
-        $response = $client->request(self::METHOD_POST, 'https://login.bol.com/token?grant_type=client_credentials', $options);
+        $response = $client->request(Method::POST->value, Url::LOGIN->value, $options);
         
         $accessToken = json_decode($response->getBody()->getContents());
        
@@ -220,7 +170,7 @@ class Client
         if ($this->rateLimits == null) {
             
             $client = new GuzzleClient();
-            $response = $client->request(self::METHOD_GET, self::BASE_URI.'/retailer/public/ratelimits');
+            $response = $client->request(Method::GET->value, Url::BASE->value.'/retailer/public/ratelimits');
             
             $this->rateLimits = json_decode($response->getBody()->getContents(), true);
         }
@@ -229,9 +179,9 @@ class Client
     }
     
     /**
-     * @param callable $limitReachedCallback
+     * @param Closure $limitReachedCallback
      */
-    public function setLimitReachedCallback(callable $limitReachedCallback): void
+    public function setLimitReachedCallback(Closure $limitReachedCallback): void
     {
         $this->limitReachedCallback = $limitReachedCallback;
     }
@@ -244,7 +194,7 @@ class Client
      */
     public function get(string $endpoint, array $query = [])
     {
-        return $this->request(self::METHOD_GET, $endpoint, [], $query);
+        return $this->request(Method::GET, $endpoint, [], $query);
     }
     
     /**
@@ -256,7 +206,7 @@ class Client
      */
     public function post(string $endpoint, array $data = [], array $query = [])
     {
-        return $this->request(self::METHOD_POST, $endpoint, $data, $query);
+        return $this->request(Method::POST, $endpoint, $data, $query);
     }
     
     /**
@@ -268,7 +218,7 @@ class Client
      */
     public function put(string $endpoint, array $data = [], array $query = [])
     {
-        return $this->request(self::METHOD_PUT, $endpoint, $data, $query);
+        return $this->request(Method::PUT, $endpoint, $data, $query);
     }
     
     /**
@@ -280,7 +230,7 @@ class Client
      */
     public function patch(string $endpoint, array $data = [], array $query = [])
     {
-        return $this->request(self::METHOD_PATCH, $endpoint, $data, $query);
+        return $this->request(Method::PATCH, $endpoint, $data, $query);
     }
     
     /**
@@ -291,7 +241,7 @@ class Client
      */
     public function delete(string $endpoint, array $query = [])
     {
-        return $this->request(self::METHOD_DELETE, $endpoint, [], $query);
+        return $this->request(Method::DELETE, $endpoint, [], $query);
     }
     
     /**
@@ -302,7 +252,7 @@ class Client
      */
     public function options(string $endpoint, array $query = [])
     {
-        return $this->request(self::METHOD_OPTIONS, $endpoint, [], $query);
+        return $this->request(Method::OPTIONS, $endpoint, [], $query);
     }
     
     /**
@@ -312,21 +262,21 @@ class Client
      */
     public function head(string $endpoint)
     {
-        return $this->request(self::METHOD_HEAD, $endpoint);
+        return $this->request(Method::HEAD, $endpoint);
     }
     
     /**
-     * @param string $acceptType = Client::ACCEPT_TYPE_JSON
+     * @param AcceptType $acceptType = AcceptType::JSON
      *
      * @return void
      */
-    public function setAcceptType(string $acceptType = Client::ACCEPT_TYPE_JSON): void
+    public function setAcceptType(AcceptType $acceptType = AcceptType::JSON): void
     {
         $this->acceptType = $acceptType;
     }
     
     /**
-     * @param string $method
+     * @param Method $method
      * @param string $endpoint
      * @param array $data = []
      * @param array $query = []
@@ -334,7 +284,7 @@ class Client
      * 
      * @return mixed
      */
-    public function request(string $method, string $endpoint, array $data = [], array $query = [])
+    public function request(Method $method, string $endpoint, array $data = [], array $query = [])
     {
         // get access token
         if ($this->token === null or $this->token->isExpired()) {
@@ -345,7 +295,7 @@ class Client
         $options = [
             RequestOptions::HTTP_ERRORS => false,
             RequestOptions::HEADERS => [
-                'Accept' => "application/vnd.retailer.v{$this->version}+{$this->acceptType}",
+                'Accept' => "application/vnd.retailer.v{$this->version}+{$this->acceptType->value}",
                 'Content-Type' => "application/vnd.retailer.v{$this->version}+json",
                 'Authorization' => "Bearer {$this->token->getValue()}"
             ]
@@ -363,11 +313,11 @@ class Client
         
         // get guzzle client
         $client = new GuzzleClient([
-            'base_uri' => self::BASE_URI,
+            'base_uri' => Url::BASE->value,
         ]);
         
         // request
-        $response = $client->request($method, $endpoint, $options);
+        $response = $client->request($method->value, $endpoint, $options);
         
         // get ratelimit
         $this->rateLimit = (int) $response->getHeaderLine('X-RateLimit-Limit');
@@ -386,7 +336,10 @@ class Client
         // get contents
         $contents = $response->getBody()->getContents();
         
-        if ($this->acceptType == Client::ACCEPT_TYPE_JSON or !in_array($response->getStatusCode(), range(200, 299))) {
+        if (
+            $this->acceptType == AcceptType::JSON
+            or !in_array($response->getStatusCode(), range(200, 299))
+        ) {
             
             // return array
             return json_decode($contents, true);
@@ -394,7 +347,7 @@ class Client
         } else {
             
             // reset accept type to json
-            $this->acceptType = self::ACCEPT_TYPE_JSON;
+            $this->acceptType = AcceptType::JSON;
             
             // return contents
             return $contents;

@@ -46,3 +46,11 @@
 ## [2.0.3] - 2026-02-11
 
  - Defaults to api v11
+
+## [3.0.0] - 2026-10-12
+
+ - Defaults to retailer api v10
+ - Require php 8.1 or higher
+ - Drop support for guzzle 6
+ - Add support for guzzle 8
+ - Add SensitiveParameter attributes

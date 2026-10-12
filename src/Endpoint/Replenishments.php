@@ -3,6 +3,7 @@
 namespace Onetoweb\Bolcom\Endpoint;
 
 use Onetoweb\Bolcom\Client;
+use Onetoweb\Bolcom\Config\AcceptType;
 
 /**
  * Replenishments Endpoint.
@@ -87,7 +88,7 @@ class Replenishments extends AbstractEndpoint
      */
     public function createProductLabels(array $data)
     {
-        $this->setAcceptType(Client::ACCEPT_TYPE_PDF);
+        $this->setAcceptType(AcceptType::PDF);
         
         return $this->client->post($this->getUrl('product-labels'), $data);
     }
@@ -121,7 +122,7 @@ class Replenishments extends AbstractEndpoint
      */
     public function getLoadCarrierLabelsById(string $replenishmentId, array $query = [])
     {
-        $this->setAcceptType(Client::ACCEPT_TYPE_PDF);
+        $this->setAcceptType(AcceptType::PDF);
         
         return $this->client->get($this->getUrl("$replenishmentId/load-carrier-labels"), $query);
     }
@@ -133,7 +134,7 @@ class Replenishments extends AbstractEndpoint
      */
     public function getPickListById(string $replenishmentId)
     {
-        $this->setAcceptType(Client::ACCEPT_TYPE_PDF);
+        $this->setAcceptType(AcceptType::PDF);
         
         return $this->client->get($this->getUrl("$replenishmentId/pick-list"));
     }
