@@ -291,12 +291,24 @@ class Client
             $this->getAccessToken();
         }
         
+        // Orders still use the v10 media type, including with a v11 client.
+        // Apply this here so endpoint helpers and direct get/put calls behave alike.
+        $version = $this->version;
+        $path = parse_url($endpoint, PHP_URL_PATH);
+        if (
+            $version === 11
+            && is_string($path)
+            && preg_match('#^/retailer/(?:demo/)?orders(?:/|$)#', $path)
+        ) {
+            $version = 10;
+        }
+
         // build options
         $options = [
             RequestOptions::HTTP_ERRORS => false,
             RequestOptions::HEADERS => [
-                'Accept' => "application/vnd.retailer.v{$this->version}+{$this->acceptType->value}",
-                'Content-Type' => "application/vnd.retailer.v{$this->version}+json",
+                'Accept' => "application/vnd.retailer.v{$version}+{$this->acceptType->value}",
+                'Content-Type' => "application/vnd.retailer.v{$version}+json",
                 'Authorization' => "Bearer {$this->token->getValue()}"
             ]
         ];
